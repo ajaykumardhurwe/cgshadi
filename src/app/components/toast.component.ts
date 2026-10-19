@@ -11,7 +11,7 @@ import { ToastService } from '../store/toast.service';
     <div class="cg-toast-wrap">
       @for (t of toast.toasts(); track t.id) {
         <div class="cg-toast-item" (click)="toast.dismiss(t.id)">
-          <mat-icon style="font-size:18px;color:var(--cg-primary);">favorite</mat-icon>
+          <mat-icon>favorite</mat-icon>
           <span>{{ t.message }}</span>
         </div>
       }
@@ -44,6 +44,7 @@ import { ToastService } from '../store/toast.service';
       pointer-events: auto;
       animation: cgtoastin 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
+    .cg-toast-item mat-icon { font-size: 18px; color: var(--cg-primary); }
     @keyframes cgtoastin {
       from { opacity: 0; transform: translateY(20px) scale(0.95); }
       to { opacity: 1; transform: translateY(0) scale(1); }

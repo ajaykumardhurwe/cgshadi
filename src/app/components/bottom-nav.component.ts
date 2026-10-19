@@ -33,7 +33,6 @@ interface NavTab {
 export class BottomNavComponent {
   @Input() active: TabKey = 'home';
   @Input() matchesCount = 0;
-  @Input() favCount = 0;
   @Output() select = new EventEmitter<TabKey>();
 
   tabs: NavTab[] = [
@@ -45,8 +44,7 @@ export class BottomNavComponent {
   ];
 
   badgeFor(key: TabKey): string {
-    if (key === 'matches') return String(this.matchesCount);
-    return '0';
+    return key === 'matches' ? String(this.matchesCount) : '0';
   }
 
   iconFor(tab: NavTab): string {

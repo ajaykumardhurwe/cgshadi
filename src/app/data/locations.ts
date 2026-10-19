@@ -1,7 +1,3 @@
-export interface Subdistrict {
-  name: string;
-}
-
 export interface District {
   name: string;
   division: string;
@@ -67,7 +63,12 @@ export const SURNAMES: string[] = [
   'Tripathi', 'Chaturvedi', 'Agrawal', 'Sahu', 'Yadav', 'Kurmi',
   'Patel', 'Sinha', 'Singh', 'Prasad', 'Das', 'Lal', 'Kumar',
   'Banjare', 'Netam', 'Kawasi', 'Mandavi', 'Markam', 'Potai',
-  'Baghel', 'Soni', 'Gupta', 'Jaiswal', 'Chandrakar', 'Chandrakar',
+  'Baghel', 'Soni', 'Gupta', 'Jaiswal', 'Chandrakar',
   'Dewangan', 'Suryawanshi', 'Thakur', 'Rajput', 'Kshatriya',
   'Nishad', 'Kewat', 'Manikpuri', 'Porte', 'Kashyap', 'Bhardwaj',
 ];
+
+export function subdistrictsOf(districtName: string | null): string[] {
+  if (!districtName) return [];
+  return DISTRICTS.find((d) => d.name === districtName)?.subdistricts ?? [];
+}

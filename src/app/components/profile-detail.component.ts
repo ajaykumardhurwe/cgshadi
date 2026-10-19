@@ -13,43 +13,45 @@ import { AppStore } from '../store/app-store';
   imports: [CommonModule, MatIconModule, MatButtonModule, MatDividerModule, MatChipsModule],
   template: `
     <div class="cg-fade-in" *ngIf="profile">
-      <div style="position:relative;">
-        <img [src]="profile.photo" [alt]="profile.name" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:0 0 24px 24px;display:block;" />
+      <div class="cg-photo-wrap">
+        <img [src]="profile.photo" [alt]="profile.name" />
         <button type="button" class="cg-back-btn" (click)="close.emit()">
           <mat-icon>arrow_back</mat-icon>
         </button>
-        <button type="button" class="cg-detail-heart" [class.active]="isFav" (click)="store.toggleFavourite(profile.id)">
+        <button type="button" class="cg-detail-heart" [class.active]="isFav"
+          (click)="store.toggleFavourite(profile.id)"
+          [attr.aria-label]="isFav ? 'Remove from saved' : 'Save profile'">
           <mat-icon>{{ isFav ? 'favorite' : 'favorite_border' }}</mat-icon>
         </button>
       </div>
 
-      <div style="padding:18px 20px 28px;">
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-          <h2 style="margin:0;font-size:22px;font-weight:600;">{{ profile.name }} {{ profile.surname }}</h2>
+      <div class="cg-detail-body">
+        <div class="cg-detail-name-row">
+          <h2>{{ profile.name }} {{ profile.surname }}</h2>
           <span *ngIf="profile.verified" class="cg-badge-verified">
-            <mat-icon style="font-size:16px;">verified</mat-icon> Verified
+            <mat-icon>verified</mat-icon> Verified
           </span>
         </div>
 
-        <div style="color:var(--cg-muted);margin-top:4px;">
+        <div class="cg-muted cg-detail-meta">
           {{ profile.age }} yrs · {{ profile.height }} · {{ profile.gender }}
         </div>
-        <div style="color:var(--cg-muted);font-size:13px;margin-top:2px;">
-          <mat-icon style="font-size:14px;vertical-align:middle;">place</mat-icon>
+        <div class="cg-muted cg-detail-loc">
+          <mat-icon>place</mat-icon>
           {{ profile.subdistrict }}, {{ profile.district }}, Chhattisgarh
         </div>
 
-        <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
+        <div class="cg-detail-chips">
           <span class="cg-chip">{{ profile.caste }}</span>
           <span class="cg-chip accent">{{ profile.occupation }}</span>
           <span class="cg-chip success">{{ profile.income }}</span>
         </div>
 
-        <p style="margin:16px 0 6px;font-style:italic;color:#444;line-height:1.5;">"{{ profile.bio }}"</p>
+        <p class="cg-detail-bio">"{{ profile.bio }}"</p>
 
         <mat-divider></mat-divider>
 
-        <h3 style="margin:14px 0 8px;font-size:15px;font-weight:600;">Details</h3>
+        <h3 class="cg-detail-h3">Details</h3>
         <div class="cg-detail-grid">
           <div><mat-icon>school</mat-icon><div><div class="cg-d-label">Education</div><div class="cg-d-val">{{ profile.education }}</div></div></div>
           <div><mat-icon>work</mat-icon><div><div class="cg-d-label">Occupation</div><div class="cg-d-val">{{ profile.occupation }}</div></div></div>
@@ -59,16 +61,16 @@ import { AppStore } from '../store/app-store';
           <div><mat-icon>badge</mat-icon><div><div class="cg-d-label">Surname</div><div class="cg-d-val">{{ profile.surname }}</div></div></div>
         </div>
 
-        <h3 style="margin:18px 0 8px;font-size:15px;font-weight:600;">Hobbies & Interests</h3>
-        <mat-chip-set style="display:flex;gap:8px;flex-wrap:wrap;">
+        <h3 class="cg-detail-h3">Hobbies & Interests</h3>
+        <mat-chip-set class="cg-hobbies">
           <mat-chip *ngFor="let h of profile.hobbies">{{ h }}</mat-chip>
         </mat-chip-set>
 
-        <div style="display:flex;gap:10px;margin-top:22px;">
-          <button mat-stroked-button style="flex:1;" (click)="store.toggleFavourite(profile.id)">
+        <div class="cg-detail-actions">
+          <button mat-stroked-button (click)="store.toggleFavourite(profile.id)">
             <mat-icon>{{ isFav ? 'favorite' : 'favorite_border' }}</mat-icon> {{ isFav ? 'Saved' : 'Save' }}
           </button>
-          <button mat-flat-button color="primary" style="flex:2;background:var(--cg-primary);color:#fff;" (click)="onConnect()">
+          <button mat-flat-button class="cg-connect-btn" (click)="onConnect()">
             <mat-icon>favorite</mat-icon> Send Interest
           </button>
         </div>
@@ -76,54 +78,35 @@ import { AppStore } from '../store/app-store';
     </div>
   `,
   styles: [`
-    .cg-detail-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
+    .cg-photo-wrap { position: relative; }
+    .cg-photo-wrap img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 0 0 24px 24px;
+      display: block;
     }
-    .cg-detail-grid > div {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    .cg-detail-grid mat-icon { color: var(--cg-primary); font-size: 22px; }
-    .cg-d-label { font-size: 11px; color: var(--cg-muted); }
-    .cg-d-val { font-size: 13px; font-weight: 500; }
-    .cg-back-btn {
+    .cg-back-btn, .cg-detail-heart {
       position: absolute;
       top: 12px;
-      left: 12px;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: none;
-      background: rgba(0, 0, 0, 0.45);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      backdrop-filter: blur(4px);
-      transition: background 0.2s ease, transform 0.2s ease;
-    }
-    .cg-back-btn:hover { background: rgba(0, 0, 0, 0.6); transform: scale(1.05); }
-    .cg-back-btn mat-icon { font-size: 22px; width: 22px; height: 22px; }
-    .cg-detail-heart {
-      position: absolute;
-      top: 12px;
-      right: 12px;
       width: 42px;
       height: 42px;
       border-radius: 50%;
       border: none;
-      background: rgba(255, 255, 255, 0.95);
-      color: #888;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
       transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease, color 0.2s ease;
+    }
+    .cg-back-btn { left: 12px; background: rgba(0, 0, 0, 0.45); color: #fff; backdrop-filter: blur(4px); }
+    .cg-back-btn:hover { background: rgba(0, 0, 0, 0.6); transform: scale(1.05); }
+    .cg-back-btn mat-icon { font-size: 22px; width: 22px; height: 22px; }
+    .cg-detail-heart {
+      right: 12px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #888;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
     }
     .cg-detail-heart mat-icon { font-size: 22px; width: 22px; height: 22px; }
     .cg-detail-heart:hover { transform: scale(1.08); }
@@ -138,6 +121,24 @@ import { AppStore } from '../store/app-store';
       70% { transform: scale(0.9); }
       100% { transform: scale(1); }
     }
+    .cg-detail-body { padding: 18px 20px 28px; }
+    .cg-detail-name-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .cg-detail-name-row h2 { margin: 0; font-size: 22px; font-weight: 600; }
+    .cg-detail-meta { margin-top: 4px; }
+    .cg-detail-loc { font-size: 13px; margin-top: 2px; display: flex; align-items: center; gap: 3px; }
+    .cg-detail-loc mat-icon { font-size: 14px; width: 14px; height: 14px; }
+    .cg-detail-chips { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .cg-detail-bio { margin: 16px 0 6px; font-style: italic; color: #444; line-height: 1.5; }
+    .cg-detail-h3 { margin: 14px 0 8px; font-size: 15px; font-weight: 600; }
+    .cg-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .cg-detail-grid > div { display: flex; gap: 8px; align-items: center; }
+    .cg-detail-grid mat-icon { color: var(--cg-primary); font-size: 22px; width: 22px; height: 22px; }
+    .cg-d-label { font-size: 11px; color: var(--cg-muted); }
+    .cg-d-val { font-size: 13px; font-weight: 500; }
+    .cg-hobbies { display: flex; gap: 8px; flex-wrap: wrap; }
+    .cg-detail-actions { display: flex; gap: 10px; margin-top: 22px; }
+    .cg-detail-actions .mat-stroked-button { flex: 1; }
+    .cg-connect-btn { flex: 2; background: var(--cg-primary); color: #fff; }
   `],
 })
 export class ProfileDetailComponent {
@@ -147,7 +148,7 @@ export class ProfileDetailComponent {
   @Output() connect = new EventEmitter<Profile>();
   store = inject(AppStore);
 
-  onConnect() {
+  onConnect(): void {
     this.store.sendRequest(this.profile.id);
     this.connect.emit(this.profile);
   }

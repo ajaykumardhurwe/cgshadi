@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,19 +24,19 @@ import { LogoComponent } from '../components/logo.component';
         </div>
       </div>
 
-      <mat-tab-group style="margin-top:4px;" [color]="'primary'" (selectedTabChange)="onTab($event)">
+      <mat-tab-group style="margin-top:4px;" [color]="'primary'">
         <mat-tab label="Accepted ({{ store.accepted().length }})">
           <div style="padding:16px;">
             <ng-container *ngIf="accepted().length; else emptyAcc">
-              <div style="display:flex;flex-direction:column;gap:14px;">
-                <cg-profile-card *ngFor="let p of accepted()" [profile]="p" [isFav]="isFav(p.id)"
-                  (open)="openProfile(p)" (fav)="store.toggleFavourite(p.id)"></cg-profile-card>
+              <div class="cg-card-list">
+                <cg-profile-card *ngFor="let p of accepted()" [profile]="p" [isFav]="store.isFavourite(p.id)"
+                  (open)="store.openProfile(p.id)" (fav)="store.toggleFavourite(p.id)"></cg-profile-card>
               </div>
             </ng-container>
             <ng-template #emptyAcc>
-              <div class="cg-card" style="padding:28px;text-align:center;">
-                <mat-icon style="font-size:42px;color:var(--cg-muted);">handshake</mat-icon>
-                <p class="cg-muted" style="margin-top:8px;">No accepted matches yet.</p>
+              <div class="cg-empty">
+                <mat-icon>handshake</mat-icon>
+                <p class="cg-muted">No accepted matches yet.</p>
               </div>
             </ng-template>
           </div>
@@ -45,15 +45,15 @@ import { LogoComponent } from '../components/logo.component';
         <mat-tab label="Requests ({{ store.requests().length }})">
           <div style="padding:16px;">
             <ng-container *ngIf="requests().length; else emptyReq">
-              <div style="display:flex;flex-direction:column;gap:14px;">
-                <cg-profile-card *ngFor="let p of requests()" [profile]="p" [isFav]="isFav(p.id)"
-                  (open)="openProfile(p)" (fav)="store.toggleFavourite(p.id)"></cg-profile-card>
+              <div class="cg-card-list">
+                <cg-profile-card *ngFor="let p of requests()" [profile]="p" [isFav]="store.isFavourite(p.id)"
+                  (open)="store.openProfile(p.id)" (fav)="store.toggleFavourite(p.id)"></cg-profile-card>
               </div>
             </ng-container>
             <ng-template #emptyReq>
-              <div class="cg-card" style="padding:28px;text-align:center;">
-                <mat-icon style="font-size:42px;color:var(--cg-muted);">mail</mat-icon>
-                <p class="cg-muted" style="margin-top:8px;">You haven't sent any interest requests.</p>
+              <div class="cg-empty">
+                <mat-icon>mail</mat-icon>
+                <p class="cg-muted">You haven't sent any interest requests.</p>
               </div>
             </ng-template>
           </div>
@@ -61,16 +61,16 @@ import { LogoComponent } from '../components/logo.component';
 
         <mat-tab label="Saved ({{ store.favourites().length }})">
           <div style="padding:16px;">
-            <ng-container *ngIf="favourites().length; else emptyFav">
-              <div style="display:flex;flex-direction:column;gap:14px;">
-                <cg-profile-card *ngFor="let p of favourites()" [profile]="p" [isFav]="true"
-                  (open)="openProfile(p)" (fav)="store.toggleFavourite(p.id)"></cg-profile-card>
+            <ng-container *ngIf="saved().length; else emptyFav">
+              <div class="cg-card-list">
+                <cg-profile-card *ngFor="let p of saved()" [profile]="p" [isFav]="true"
+                  (open)="store.openProfile(p.id)" (fav)="store.toggleFavourite(p.id)"></cg-profile-card>
               </div>
             </ng-container>
             <ng-template #emptyFav>
-              <div class="cg-card" style="padding:28px;text-align:center;">
-                <mat-icon style="font-size:42px;color:var(--cg-muted);">favorite_border</mat-icon>
-                <p class="cg-muted" style="margin-top:8px;">No saved profiles yet.</p>
+              <div class="cg-empty">
+                <mat-icon>favorite_border</mat-icon>
+                <p class="cg-muted">No saved profiles yet.</p>
               </div>
             </ng-template>
           </div>
@@ -78,14 +78,22 @@ import { LogoComponent } from '../components/logo.component';
       </mat-tab-group>
     </div>
   `,
+  styles: [`
+    .cg-card-list { display: flex; flex-direction: column; gap: 14px; }
+    .cg-empty {
+      padding: 28px;
+      text-align: center;
+      background: var(--cg-surface);
+      border-radius: var(--cg-radius);
+      box-shadow: 0 4px 18px rgba(120, 60, 20, 0.07);
+    }
+    .cg-empty mat-icon { font-size: 42px; color: var(--cg-muted); }
+    .cg-empty p { margin-top: 8px; }
+  `],
 })
 export class TabMatchesComponent {
   store = inject(AppStore);
-  accepted = computed(() => this.store.profiles.filter((p) => this.store.accepted().includes(p.id)));
-  requests = computed(() => this.store.profiles.filter((p) => this.store.requests().includes(p.id)));
-  favourites = computed(() => this.store.favouritesList());
-
-  isFav(id: number) { return this.store.favourites().includes(id); }
-  onTab(_e: any) {}
-  openProfile(p: any) { this.store.selectedProfileId.set(p.id); }
+  accepted = computed(() => this.store.acceptedList());
+  requests = computed(() => this.store.requestsList());
+  saved = computed(() => this.store.favouritesList());
 }

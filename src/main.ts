@@ -44,12 +44,12 @@ import { TabSettingsComponent } from './app/tabs/tab-settings.component';
       </cg-bottom-nav>
 
       @if (selectedProfile(); as p) {
-        <div class="cg-detail-overlay" (click)="closeDetail()">
+        <div class="cg-detail-overlay" (click)="store.closeProfile()">
           <div class="cg-detail-panel" (click)="$event.stopPropagation()">
             <cg-profile-detail
               [profile]="p"
-              [isFav]="store.favourites().includes(p.id)"
-              (close)="closeDetail()"
+              [isFav]="store.isFavourite(p.id)"
+              (close)="store.closeProfile()"
               (connect)="onConnect($event)">
             </cg-profile-detail>
           </div>
@@ -98,13 +98,9 @@ export class App {
     return id ? this.store.getProfile(id) : undefined;
   });
 
-  closeDetail() {
-    this.store.selectedProfileId.set(null);
-  }
-
-  onConnect(p: any) {
+  onConnect(p: { name: string }): void {
     this.toast.show(`Interest sent to ${p.name}!`);
-    setTimeout(() => this.closeDetail(), 600);
+    setTimeout(() => this.store.closeProfile(), 600);
   }
 }
 

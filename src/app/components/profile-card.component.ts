@@ -1,17 +1,16 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 import { Profile } from '../data/profiles';
 
 @Component({
   selector: 'cg-profile-card',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule],
+  imports: [CommonModule, MatIconModule],
   template: `
     <div class="cg-card cg-card-pop" (click)="open.emit(profile)">
       <div class="cg-photo-wrap">
-        <img [src]="profile.photo" [alt]="profile.name" class="cg-profile-avatar" loading="lazy" />
+        <img [src]="profile.photo" [alt]="profile.name" loading="lazy" />
         <span *ngIf="profile.online" class="cg-online-dot"></span>
         <span *ngIf="profile.verified" class="cg-verified-pill">
           <mat-icon>verified</mat-icon> Verified
@@ -22,19 +21,16 @@ import { Profile } from '../data/profiles';
           <mat-icon>{{ isFav ? 'favorite' : 'favorite_border' }}</mat-icon>
         </button>
       </div>
-      <div style="padding:12px 14px 14px;">
-        <div style="display:flex;align-items:center;gap:6px;justify-content:space-between;">
-          <span style="font-weight:600;font-size:16px;">{{ profile.name }} {{ profile.surname }}</span>
+      <div class="cg-card-body">
+        <div class="cg-card-head">
+          <span class="cg-card-name">{{ profile.name }} {{ profile.surname }}</span>
           <span class="cg-age-chip">{{ profile.age }} yrs</span>
         </div>
-        <div style="font-size:13px;color:var(--cg-muted);margin-top:4px;">
-          {{ profile.height }} · {{ profile.caste }}
+        <div class="cg-card-sub">{{ profile.height }} · {{ profile.caste }}</div>
+        <div class="cg-card-loc">
+          <mat-icon>place</mat-icon>{{ profile.subdistrict }}, {{ profile.district }}
         </div>
-        <div style="font-size:12px;color:var(--cg-muted);margin-top:3px;display:flex;align-items:center;gap:3px;">
-          <mat-icon style="font-size:14px;">place</mat-icon>
-          {{ profile.subdistrict }}, {{ profile.district }}
-        </div>
-        <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;">
+        <div class="cg-card-chips">
           <span class="cg-chip">{{ profile.occupation }}</span>
           <span class="cg-chip accent">{{ profile.education }}</span>
         </div>
@@ -49,7 +45,7 @@ import { Profile } from '../data/profiles';
       aspect-ratio: 1;
       background: #fde8e8;
     }
-    .cg-profile-avatar {
+    .cg-photo-wrap img {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -100,17 +96,9 @@ import { Profile } from '../data/profiles';
       padding: 0;
       z-index: 2;
     }
-    .cg-heart-btn mat-icon {
-      font-size: 22px;
-      width: 22px;
-      height: 22px;
-    }
-    .cg-heart-btn:hover {
-      transform: scale(1.08);
-    }
-    .cg-heart-btn:active {
-      transform: scale(0.92);
-    }
+    .cg-heart-btn mat-icon { font-size: 22px; width: 22px; height: 22px; }
+    .cg-heart-btn:hover { transform: scale(1.08); }
+    .cg-heart-btn:active { transform: scale(0.92); }
     .cg-heart-btn.active {
       background: var(--cg-primary);
       color: #fff;
@@ -122,6 +110,14 @@ import { Profile } from '../data/profiles';
       70% { transform: scale(0.9); }
       100% { transform: scale(1); }
     }
+    .cg-card-body { padding: 12px 14px 14px; }
+    .cg-card-head {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: space-between;
+    }
+    .cg-card-name { font-weight: 600; font-size: 16px; }
     .cg-age-chip {
       background: #fde8e8;
       color: var(--cg-primary-dark);
@@ -129,6 +125,22 @@ import { Profile } from '../data/profiles';
       font-weight: 600;
       padding: 3px 8px;
       border-radius: 999px;
+    }
+    .cg-card-sub { font-size: 13px; color: var(--cg-muted); margin-top: 4px; }
+    .cg-card-loc {
+      font-size: 12px;
+      color: var(--cg-muted);
+      margin-top: 3px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .cg-card-loc mat-icon { font-size: 14px; width: 14px; height: 14px; }
+    .cg-card-chips {
+      margin-top: 10px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
     }
   `],
 })

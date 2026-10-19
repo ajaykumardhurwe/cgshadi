@@ -10,13 +10,13 @@ export class ToastService {
   readonly toasts = signal<Toast[]>([]);
   private nextId = 1;
 
-  show(message: string, duration = 2500) {
+  show(message: string, duration = 2500): void {
     const id = this.nextId++;
     this.toasts.update((list) => [...list, { message, id }]);
     setTimeout(() => this.dismiss(id), duration);
   }
 
-  dismiss(id: number) {
+  dismiss(id: number): void {
     this.toasts.update((list) => list.filter((t) => t.id !== id));
   }
 }
