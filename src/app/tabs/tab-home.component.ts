@@ -26,9 +26,9 @@ interface QuickFilter {
           <div style="display:flex;align-items:center;gap:12px;">
             <cg-logo [size]="'lg'" [px]="48"></cg-logo>
             <div>
-              <div style="font-size:11px;opacity:0.9;letter-spacing:1px;">NAMASTE</div>
-              <div style="font-size:22px;font-weight:700;letter-spacing:0.5px;">CGSHADI</div>
-              <div style="font-size:10px;opacity:0.85;">Chhattisgarh Matrimonial</div>
+              <div style="font-size:11px;opacity:0.9;letter-spacing:1px;">जय जोहार</div>
+              <div style="font-size:22px;font-weight:700;letter-spacing:0.5px;">आदिवासी शादी पोर्टल</div>
+              <div style="font-size:10px;opacity:0.85;">में आपका स्वागत है</div>
             </div>
           </div>
           <button mat-icon-button style="color:#fff;" (click)="store.setTab('settings')">
